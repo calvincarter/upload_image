@@ -22,7 +22,7 @@ app.use(bodyParser.json());
  
 // hook morganBody to express app
 morganBody(app)
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 
