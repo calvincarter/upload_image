@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload Images to Server</title>
+    <meta charset="utf-8">
+    
+</head>
+<body>
+
+<h1>Upload Image</h1>
+
+<form>
+        <input id="file-input" type="file" accept="image/*" name="photo" style="display: none;">
+        <img id="open-image-upload" src="/assets/images/upload.svg">
+        <!-- <input id="submit" type="submit" value="Submit"> -->
+</form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.9.0/js/vendor/jquery.ui.widget.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.9.0/js/jquery.fileupload.min.js"></script>
+<script>
+    $('#open-image-upload').click(function() { 
+        $('#file-input').trigger('click');
+    });
+
+    $(document).ready(function() {
+        $("#file-input").fileupload({
+            dataType: "json",
+            add(event,data) {
+                var formData = new FormData();
+                formData.append("photo", data.files[0]);
+                $.ajax({
+                    url: "/upload", 
+                    data: formData,
+                    processData:false,
+                    cache: false,
+                    contentType: false,
+                    method: "POST",
+                    success: function(response) {
+                        console.log(response);
+                        const img = $("img");
+                        img.attr("src", response.friendlyUrl);
+                        $("form").append(img);
+                    },
+                    error: function(error) { 
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
